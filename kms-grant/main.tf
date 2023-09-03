@@ -74,6 +74,8 @@ resource "aws_kms_key_policy" "main" {
 resource "aws_iam_user" "john" {
   name = local.grant_user_name
   path = "/"
+
+  force_destroy = true
 }
 
 resource "aws_iam_user_policy_attachment" "read_only_john" {
@@ -87,6 +89,8 @@ resource "aws_iam_user_policy_attachment" "read_only_john" {
 resource "aws_iam_user" "anna" {
   name = "Anna"
   path = "/"
+
+  force_destroy = true
 }
 
 data "aws_iam_policy_document" "kms" {
