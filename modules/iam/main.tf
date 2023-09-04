@@ -6,6 +6,29 @@ resource "aws_iam_user" "john" {
   force_destroy = true
 }
 
+resource "aws_iam_user_policy" "s3" {
+  name = "JohnS3"
+  user = aws_iam_user.john.name
+
+  policy = jsonencode({
+    "Version" : "2012-10-17",
+    "Statement" : [
+      {
+        "Sid" : "VisualEditor0",
+        "Effect" : "Allow",
+        "Action" : [
+          "s3:PutObject",
+          "s3:PutObjectAcl",
+          "s3:GetObjectAcl",
+          "s3:ListBucket",
+          "s3:GetBucketLocation"
+        ],
+        "Resource" : "${var.bucket_arn}"
+      }
+    ]
+  })
+}
+
 resource "aws_iam_user_policy_attachment" "read_only_john" {
   user       = aws_iam_user.john.name
   policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
