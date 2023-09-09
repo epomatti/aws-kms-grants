@@ -68,10 +68,101 @@ The following resources will be configured for this hands-on:
 
 ### Hands-on
 
+#### Create the grants
+
 Connect to the EC2 instance and set up the `AdminPrin` user:
 
 ```sh
 aws configure
+```
+
+Now create the grants for the exercise.
+
+> ℹ️ Note: Copy the Grant Token and Grant ID
+
+Create a grant providing the Grantee Principal the ability to generate a data key:
+
+```sh
+aws kms create-grant \
+    --key-id <<KEY ID>> \
+    --grantee-principal <<ARN of GranteePrin>> \
+    --operations GenerateDataKey \
+    --retiring-principal <<ARN of RetirePrin>> \
+    --constraints EncryptionContextSubset={Department=IT}
+```
+
+Create a grant providing the Grantee Principal the ability to decrypt:
+
+```sh
+aws kms create-grant \
+    --key-id <<KEY ID>> \
+    --grantee-principal <<ARN of GranteePrin>> \
+    --operations Decrypt \
+    --retiring-principal <<ARN of RetirePrin>> \
+    --constraints EncryptionContextSubset={Department=Finance}
+```
+
+#### Use the grants
+
+Configure `GranteePrin`:
+
+```sh
+aws configure
+```
+
+Generate a Data Key:
+
+> 💡 Note: If eventual consistency is not achieved yet, you can add `--grant-token <<GRANT TOKEN>>`
+
+```sh
+aws kms generate-data-key \
+    --key-id <<KEY ID>> \
+    --key-spec AES_256 \
+    --encryption-context Department=IT
+```
+
+#### Retire a grant
+
+Configure `RetirePrin`:
+
+```sh
+aws configure
+```
+
+Retire the grant:
+
+```sh
+aws kms retire-grant --key-id <<KEY ARN>> --grant-token <<GRANT-TOKEN>>
+```
+
+#### Revoke grants
+
+Configure `AdminPrin` again:
+
+```sh
+aws configure
+```
+
+List the existing grants:
+
+```sh
+aws kms list-grants --key-id <<KEY ARN>>
+```
+
+Revoke the `Decrypt` grant:
+
+```sh
+aws kms revoke-grant --key-id <<KEY ARN>> --grant-id <<GRANT ID>>
+```
+
+---
+
+### Clean-up
+
+Destroy the resources:
+
+```
+terraform destroy -auto-approve
 ```
 
 [1]: https://docs.aws.amazon.com/kms/latest/developerguide/grants.html
