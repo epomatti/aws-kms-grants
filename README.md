@@ -3,14 +3,12 @@
 This code repo demonstrates the usage of KMS [_grants_][1]. As per the documentation:
 
 > A grant is a policy instrument that allows AWS principals to use KMS keys in cryptographic operations.
-
-More specifically:
-
+> ...
 > Grants are commonly used by AWS services that integrate with AWS KMS to encrypt your data at rest. The service creates a grant on behalf of a user in the account, uses its permissions, and retires the grant as soon as its task is complete.
 
 There are two scenarios in this repository:
 - In [conjunction with S3][2]. To reduce costs with SSE-KMS we'll be using [Amazon S3 Buckets Keys][3].
-- Hands-on using AWS CLI
+- Hands-on using AWS CLI to `Create`, `Retire`, and `Revoke` grants.
 
 Grants can take up to 5 minutes to achieve eventual consistency. For immediate use, it's necessary to use a grant token.
 
