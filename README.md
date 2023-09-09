@@ -8,7 +8,9 @@ More specifically:
 
 > Grants are commonly used by AWS services that integrate with AWS KMS to encrypt your data at rest. The service creates a grant on behalf of a user in the account, uses its permissions, and retires the grant as soon as its task is complete.
 
-In this example, grants will be used in [conjunction with S3][2]. To reduce costs with SSE-KMS we'll be using [Amazon S3 Buckets Keys][3].
+There are two scenarios in this repository:
+- In [conjunction with S3][2]. To reduce costs with SSE-KMS we'll be using [Amazon S3 Buckets Keys][3].
+- Hands-on using AWS CLI
 
 Grants can take up to 5 minutes to achieve eventual consistency. For immediate use, it's necessary to use a grant token.
 
