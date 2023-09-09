@@ -54,7 +54,7 @@ Check the KMS key permission statement for IAM user `John`, which should be the 
 
 IAM user `John` has no other permissions other than IAM `Readonly` for ease of development.
 
-### AWS CLI
+## AWS CLI
 
 This section implements this [hands-on video][4] steps.
 
@@ -65,6 +65,14 @@ The following resources will be configured for this hands-on:
 - EC2 instance with the AWS CLI installed
 - `AdminPrin` will be granted administrator privileges to the KMS key
 - ⚠️ `AdminPrin` will be granted `AdministratorAccess`
+
+### Hands-on
+
+Connect to the EC2 instance and set up the `AdminPrin` user:
+
+```sh
+aws configure
+```
 
 [1]: https://docs.aws.amazon.com/kms/latest/developerguide/grants.html
 [2]: https://docs.aws.amazon.com/kms/latest/developerguide/services-s3.html

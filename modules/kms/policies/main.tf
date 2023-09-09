@@ -2,23 +2,13 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 locals {
-  aws_account_id = data.aws_caller_identity.current.account_id
-  aws_region     = data.aws_region.current.name
+  aws_account_id        = data.aws_caller_identity.current.account_id
+  aws_region            = data.aws_region.current.name
+  aws_account_principal = "arn:aws:iam::${local.aws_account_id}:root"
 }
 
-### KMS S3 ###
-resource "aws_kms_key" "main" {
-  description             = "Testing grants"
-  deletion_window_in_days = 7
-}
-
-resource "aws_kms_alias" "main" {
-  name          = "alias/testing-grants"
-  target_key_id = aws_kms_key.main.key_id
-}
-
-resource "aws_kms_key_policy" "main" {
-  key_id = aws_kms_key.main.id
+resource "aws_kms_key_policy" "s3" {
+  key_id = var.kms_key_id_s3
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -28,7 +18,7 @@ resource "aws_kms_key_policy" "main" {
         Sid    = "Enable IAM User Permissions"
         Effect = "Allow"
         Principal = {
-          AWS = "arn:aws:iam::${local.aws_account_id}:root"
+          AWS = "${local.aws_account_principal}"
         }
         Action   = "kms:*"
         Resource = "*"
@@ -37,7 +27,7 @@ resource "aws_kms_key_policy" "main" {
         Sid    = "Allow attachment of persistent resources"
         Effect = "Allow"
         Principal = {
-          AWS = "arn:aws:iam::${local.aws_account_id}:user/${var.iam_user_name}"
+          AWS = "${var.john_user_arn}"
         }
         Action = [
           "kms:CreateGrant",
@@ -59,20 +49,8 @@ resource "aws_kms_key_policy" "main" {
   })
 }
 
-### KMS Hands-on ###
-
-resource "aws_kms_key" "handson" {
-  description             = "Hands-on CMK"
-  deletion_window_in_days = 7
-}
-
-resource "aws_kms_alias" "handson" {
-  name          = "alias/hands-on"
-  target_key_id = aws_kms_key.handson.key_id
-}
-
 resource "aws_kms_key_policy" "handson" {
-  key_id = aws_kms_key.handson.id
+  key_id = var.kms_key_id_handson
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -82,7 +60,7 @@ resource "aws_kms_key_policy" "handson" {
         Sid    = "Enable IAM User Permissions"
         Effect = "Allow"
         Principal = {
-          AWS = "arn:aws:iam::${local.aws_account_id}:root"
+          AWS = "${local.aws_account_principal}"
         }
         Action   = "kms:*"
         Resource = "*"
@@ -91,7 +69,7 @@ resource "aws_kms_key_policy" "handson" {
         Sid    = "Given AdminPrin permissions"
         Effect = "Allow"
         Principal = {
-          AWS = "arn:aws:iam::${local.aws_account_id}:user/AdminPrin"
+          AWS = "${var.adminprin_user_arn}"
         }
         Action   = "kms:*"
         Resource = "*"

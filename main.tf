@@ -23,18 +23,28 @@ locals {
 module "iam" {
   source        = "./modules/iam"
   iam_user_name = local.iam_user_name
-  kms_key_arn   = module.kms.key_arn
+  kms_key_arn   = module.kms_keys.key_s3_arn
   bucket_arn    = module.s3.bucket_arn
 }
 
-module "kms" {
-  source        = "./modules/kms"
+module "kms_keys" {
+  source        = "./modules/kms/keys"
   iam_user_name = local.iam_user_name
+}
+
+module "kms_policies" {
+  source = "./modules/kms/policies"
+
+  kms_key_id_s3      = module.kms_keys.key_s3_id
+  kms_key_id_handson = module.kms_keys.key_handson_id
+
+  john_user_arn      = module.iam.john_arn
+  adminprin_user_arn = module.iam.admin_principal_arn
 }
 
 module "s3" {
   source      = "./modules/s3"
-  kms_key_arn = module.kms.key_arn
+  kms_key_arn = module.kms_keys.key_s3_arn
 }
 
 module "vpc" {

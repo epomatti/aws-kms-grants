@@ -1,7 +1,12 @@
+locals {
+  kms_s3_path      = "/kms/grants/s3/"
+  kms_handson_path = "/kms/grants/hands-on/"
+}
+
 # John - Key policies
 resource "aws_iam_user" "john" {
   name = var.iam_user_name
-  path = "/kms-grants/s3"
+  path = local.kms_s3_path
 
   force_destroy = true
 }
@@ -38,7 +43,7 @@ resource "aws_iam_user_policy_attachment" "read_only_john" {
 # Anna - IAM permissions
 resource "aws_iam_user" "anna" {
   name = "Anna"
-  path = "/kms-grants/s3"
+  path = local.kms_s3_path
 
   force_destroy = true
 }
@@ -66,21 +71,21 @@ resource "aws_iam_user_policy_attachment" "read_only_anna" {
 ### Hands-on ###
 resource "aws_iam_user" "grantee_principal" {
   name = "GranteePrin"
-  path = "/kms-grants/hands-on"
+  path = local.kms_handson_path
 
   force_destroy = true
 }
 
 resource "aws_iam_user" "retire_principal" {
   name = "RetirePrin"
-  path = "/kms-grants/hands-on"
+  path = local.kms_handson_path
 
   force_destroy = true
 }
 
 resource "aws_iam_user" "admin_principal" {
   name = "AdminPrin"
-  path = "/kms-grants/hands-on"
+  path = local.kms_handson_path
 
   force_destroy = true
 }
