@@ -58,6 +58,13 @@ IAM user `John` has no other permissions other than IAM `Readonly` for ease of d
 
 This section implements this [hands-on video][4] steps.
 
+The following resources will be configured for this hands-on:
+
+- IAM users: `AdminPrin`, `RetirePrin`, and `GranteePrin`
+- KMS Key
+- EC2 instance with the AWS CLI installed
+- `AdminPrin` will be granted administrator privileges to the KMS key
+- ⚠️ `AdminPrin` will be granted `AdministratorAccess`
 
 [1]: https://docs.aws.amazon.com/kms/latest/developerguide/grants.html
 [2]: https://docs.aws.amazon.com/kms/latest/developerguide/services-s3.html

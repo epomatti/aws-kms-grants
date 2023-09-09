@@ -1,7 +1,7 @@
 # John - Key policies
 resource "aws_iam_user" "john" {
   name = var.iam_user_name
-  path = "/"
+  path = "/kms-grants/s3"
 
   force_destroy = true
 }
@@ -38,7 +38,7 @@ resource "aws_iam_user_policy_attachment" "read_only_john" {
 # Anna - IAM permissions
 resource "aws_iam_user" "anna" {
   name = "Anna"
-  path = "/"
+  path = "/kms-grants/s3"
 
   force_destroy = true
 }
@@ -65,18 +65,29 @@ resource "aws_iam_user_policy_attachment" "read_only_anna" {
 
 ### Hands-on ###
 resource "aws_iam_user" "grantee_principal" {
-  name          = "GranteePrin"
+  name = "GranteePrin"
+  path = "/kms-grants/hands-on"
+
   force_destroy = true
 }
 
 resource "aws_iam_user" "retire_principal" {
-  name          = "RetirePrin"
+  name = "RetirePrin"
+  path = "/kms-grants/hands-on"
+
   force_destroy = true
 }
 
 resource "aws_iam_user" "admin_principal" {
-  name          = "AdminPrin"
+  name = "AdminPrin"
+  path = "/kms-grants/hands-on"
+
   force_destroy = true
+}
+
+resource "aws_iam_user_policy_attachment" "admin" {
+  user       = aws_iam_user.anna.name
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
 resource "aws_iam_access_key" "access_key_grantee_principal" {

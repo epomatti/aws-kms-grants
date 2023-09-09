@@ -6,7 +6,7 @@ locals {
   aws_region     = data.aws_region.current.name
 }
 
-### KMS ###
+### KMS S3 ###
 resource "aws_kms_key" "main" {
   description             = "Testing grants"
   deletion_window_in_days = 7
@@ -54,6 +54,47 @@ resource "aws_kms_key_policy" "main" {
             ]
           }
         }
+      }
+    ]
+  })
+}
+
+### KMS Hands-on ###
+
+resource "aws_kms_key" "handson" {
+  description             = "Hands-on CMK"
+  deletion_window_in_days = 7
+}
+
+resource "aws_kms_alias" "handson" {
+  name          = "alias/hands-on"
+  target_key_id = aws_kms_key.handson.key_id
+}
+
+resource "aws_kms_key_policy" "handson" {
+  key_id = aws_kms_key.handson.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Id      = "EvandroCustomHandsOnCMK"
+    Statement = [
+      {
+        Sid    = "Enable IAM User Permissions"
+        Effect = "Allow"
+        Principal = {
+          AWS = "arn:aws:iam::${local.aws_account_id}:root"
+        }
+        Action   = "kms:*"
+        Resource = "*"
+      },
+      {
+        Sid    = "Given AdminPrin permissions"
+        Effect = "Allow"
+        Principal = {
+          AWS = "arn:aws:iam::${local.aws_account_id}:user/AdminPrin"
+        }
+        Action   = "kms:*"
+        Resource = "*"
       }
     ]
   })
