@@ -10,7 +10,9 @@ More specifically:
 
 In this example, grants will be used in [conjunction with S3][2]. To reduce costs with SSE-KMS we'll be using [Amazon S3 Buckets Keys][3].
 
-## Running the code
+Grants can take up to 5 minutes to achieve eventual consistency. For immediate use, it's necessary to use a grant token.
+
+## Apply
 
 Create the infrastructure:
 
@@ -18,6 +20,10 @@ Create the infrastructure:
 terraform init
 terraform apply -auto-approve
 ```
+
+This will create the required demonstration resources.
+
+## S3 grants
 
 Check the KMS key permission statement for IAM user `John`, which should be the following:
 
@@ -48,9 +54,12 @@ Check the KMS key permission statement for IAM user `John`, which should be the 
 
 IAM user `John` has no other permissions other than IAM `Readonly` for ease of development.
 
+### AWS CLI
 
+This section implements this [hands-on video][4] steps.
 
 
 [1]: https://docs.aws.amazon.com/kms/latest/developerguide/grants.html
 [2]: https://docs.aws.amazon.com/kms/latest/developerguide/services-s3.html
 [3]: https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-key.html
+[4]: https://youtu.be/lmG360mNYyA

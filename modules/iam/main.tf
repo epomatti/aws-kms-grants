@@ -61,3 +61,32 @@ resource "aws_iam_user_policy_attachment" "read_only_anna" {
   user       = aws_iam_user.anna.name
   policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
 }
+
+
+### Hands-on ###
+resource "aws_iam_user" "grantee_principal" {
+  name          = "GranteePrin"
+  force_destroy = true
+}
+
+resource "aws_iam_user" "retire_principal" {
+  name          = "RetirePrin"
+  force_destroy = true
+}
+
+resource "aws_iam_user" "admin_principal" {
+  name          = "AdminPrin"
+  force_destroy = true
+}
+
+resource "aws_iam_access_key" "access_key_grantee_principal" {
+  user = aws_iam_user.grantee_principal.name
+}
+
+resource "aws_iam_access_key" "access_key_retire_principal" {
+  user = aws_iam_user.retire_principal.name
+}
+
+resource "aws_iam_access_key" "access_key_admin_principal" {
+  user = aws_iam_user.admin_principal.name
+}
